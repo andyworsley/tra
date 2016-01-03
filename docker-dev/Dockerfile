@@ -1,7 +1,10 @@
-# from https://www.drupal.org/requirements/php#drupalversions
+# basic PHP and apache image
 FROM php:5.6-apache
 
 RUN a2enmod rewrite
+
+# install some tools
+RUN apt-get update && apt-get install -y git vim
 
 # install the PHP extensions we need
 RUN apt-get update && apt-get install -y libpng12-dev libjpeg-dev libpq-dev \
@@ -20,14 +23,6 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-WORKDIR /var/www/html
-
-# https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 8.0.1
-ENV DRUPAL_MD5 423cc4d28da066d099986ac0844f6abb
-
-RUN curl -fSL "http://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
-	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
-	&& tar -xz --strip-components=1 -f drupal.tar.gz \
-	&& rm drupal.tar.gz \
-	&& chown -R www-data:www-data sites
+# install composer
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
