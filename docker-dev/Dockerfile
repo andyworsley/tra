@@ -23,6 +23,12 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
+# update the document root ready for the application
+RUN sed -i 's|^DocumentRoot.*|DocumentRoot /var/www/html/web|' /etc/apache2/apache2.conf
+
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
+
+# change working directory to the application
+WORKDIR /var/www/html

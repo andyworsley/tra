@@ -100,6 +100,11 @@ docker run --name $MYSQL_CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSW
 docker run --name $CONTAINER_NAME -v $APP_PATH:/var/www/html --link $MYSQL_CONTAINER_NAME:mysql -p $LOCALHOST_PORT:80 -d $APP_NAME:latest
 
 # forward the port through virtualbox
-#VBoxManage controlvm "boot2docker-vm" natpf1 "http,tcp,127.0.0.1,$LOCALHOST_PORT,,$LOCALHOST_PORT"
+VBoxManage controlvm "boot2docker-vm" natpf1 "http,tcp,127.0.0.1,$LOCALHOST_PORT,,$LOCALHOST_PORT"
+
+# create cache and log directories
+docker exec -it $CONTAINER_NAME mkdir -p /var/logs/symfony2
+docker exec -it $CONTAINER_NAME  mkdir -p /var/cache/symfony2
+docker exec -it $CONTAINER_NAME chown -R www-data:www-data /var/logs/symfony2 /var/cache/symfony2
 
 exit 0

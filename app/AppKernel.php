@@ -5,6 +5,13 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
+    /** @inheritDoc */
+    public function __construct($environment, $debug)
+    {
+        date_default_timezone_set('UTC');
+        parent::__construct($environment, $debug);
+    }
+
     public function registerBundles()
     {
         $bundles = array(
@@ -31,5 +38,15 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+    }
+
+    public function getCacheDir()
+    {
+        return '/var/cache/symfony2/'.$this->environment;
+    }
+
+    public function getLogDir()
+    {
+        return '/var/logs/symfony2/'.$this->environment;
     }
 }
